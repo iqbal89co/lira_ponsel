@@ -116,9 +116,9 @@ class Menu_model extends CI_Model
 		$this->db->query($query);
 	}
 
-	public function editSubmenuData($menuId, $title, $url, $icon)
+	public function editSubmenuData($submenuId, $title, $url, $icon)
 	{
-		$query = "UPDATE `sub_menu` SET `title`='$title', `url`='$url', `icon`='$icon' WHERE `menu_id`=$menuId";
+		$query = "UPDATE `sub_menu` SET `title`='$title', `url`='$url', `icon`='$icon' WHERE `id`=$submenuId";
 		$this->db->query($query);
 	}
 

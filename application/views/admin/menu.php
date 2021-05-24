@@ -37,11 +37,11 @@
 								<a id="editMenu" href="" class="badge bg-success text-light" data-toggle="modal" data-target="#editMenuModal" data-menu="<?= $m['id'] ?>">edit</a>
 								<a href="" id="deleteMenu" class="badge bg-danger text-light" data-toggle="modal" data-target="#deleteMenuModal" data-menu="<?= $m['menu'] ?>" data-id="<?= $m['id'] ?>">delete</a>
 							</td>
-							<td><a data-toggle="collapse" id="menuTable<?= $i ?>" data-target=".menuTable<?= $i ?>"><i class="fas fa-plus-circle"></i></a></td>
+							<td><a data-toggle="collapse" id="menuTable<?= $m['id'] ?>" data-menu="<?= $m['id'] ?>" data-target=".menuTable<?= $m['id'] ?>"><i class="fas fa-plus-circle"></i></a></td>
 						</tr>
 						<tr>
 							<td colspan="999">
-								<div class="collapse menuTable<?= $i ?>">
+								<div class="collapse menuTable<?= $m['id'] ?>">
 									<button type="button" id="passToAddMenuId" class="float-right btn btn-primary" data-toggle="modal" data-target="#newSubmenuModal" data-id="<?= $m['id'] ?>">tambah submenu baru</button>
 									<table class="table table-striped table-dark w-100">
 										<thead>

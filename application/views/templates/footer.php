@@ -291,6 +291,10 @@
 			});
 		});
 
+		//collapse
+		$(document).on('click', '#menuTable2', function() {
+			$('#menuTable1').collapse();
+		});
 	});
 </script>
 
