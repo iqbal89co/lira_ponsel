@@ -49,7 +49,6 @@
 												<th>Nama submenu</th>
 												<th>URL</th>
 												<th>icon</th>
-												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -61,11 +60,6 @@
 													<td><a id="tooltipTitle" data-menu="<?= $sm['id'] ?>" data-submenu="<?= $sm['submenuId'] ?>"><?= $sm['title'] ?></a></td>
 													<td><a id="tooltipUrl" data-menu="<?= $sm['id'] ?>" data-submenu="<?= $sm['submenuId'] ?>"><?= $sm['url'] ?></a></td>
 													<td><a id="tooltipIcon" data-menu="<?= $sm['id'] ?>" data-submenu="<?= $sm['submenuId'] ?>"><?= $sm['icon'] ?></a></td>
-													<td>
-														<div class="mb-3 form-check">
-															<input type="checkbox" class="form-check-input" <?= check_active_submenu($sm['submenuId']) ?> id="subMenuSwitch" data-submenu="<?= $sm['submenuId'] ?>">
-														</div>
-													</td>
 												</tr>
 											<?php endforeach; ?>
 										</tbody>

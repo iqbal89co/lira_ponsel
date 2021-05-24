@@ -83,16 +83,6 @@ class Menu_model extends CI_Model
 		if ($countChecked != 0) {
 			$this->db->query($query2);
 		}
-		// foreach ($this->getAllRole() as $r) {
-		// 	if ($roleCleaned[$ct] === 1) {
-		// 		$query2 .= "(NULL, " . $r['id'] . ", " . $menuId . ")";
-		// 		$ct++;
-		// 		if ($ct !== count($roleCleaned)) {
-		// 			$query2 .= ", ";
-		// 		}
-		// 	}
-		// }
-		// return $this->db->query($query2);
 	}
 
 	public function editMenu($menuBaru, $menuId)
@@ -142,23 +132,5 @@ class Menu_model extends CI_Model
 	{
 		$query = "SELECT * FROM `sub_menu` WHERE id = $submenuId";
 		return $this->db->query($query)->row_array();
-	}
-
-	public function checkActiveSubmenu($submenuId)
-	{
-		$query = "SELECT is_active FROM `sub_menu` WHERE `id` = $submenuId";
-		return $this->db->query($query)->result_array();
-	}
-
-	public function activateSubmenu($submenuId)
-	{
-		$query = "UPDATE sub_menu SET is_active = 1 WHERE id = $submenuId";
-		$this->db->query($query);
-	}
-
-	public function deactivateSubmenu($submenuId)
-	{
-		$query = "UPDATE sub_menu SET is_active = 0 WHERE id = $submenuId";
-		$this->db->query($query);
 	}
 }

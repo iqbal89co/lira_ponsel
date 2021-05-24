@@ -291,21 +291,7 @@
 			});
 		});
 
-		//stuck
-		$(document).on('click', '#subMenuSwitch', function() {
-			let submenuId = $(this).data('submenu');
-			$.ajax({
-				url: "<?= base_url('admin/switchActiveSubMenu'); ?>",
-				type: 'POST',
-				data: {
-					submenuId: submenuId
-				},
-				success: function() {
-					document.location.href = "<?= base_url('admin/menu'); ?>";
-				}
-			});
-		});
-	})
+	});
 </script>
 
 </body>
