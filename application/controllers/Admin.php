@@ -23,79 +23,93 @@ class Admin extends CI_Controller
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$data['menu'] = $this->menu->getAllMenu();
 
-		$this->form_validation->set_rules('menu', 'Menu', 'required');
+		$this->view->getDefault($data, 'admin/menu');
+	}
 
-		if ($this->form_validation->run() == false) {
-			$this->view->getDefault($data, 'admin/menu');
-		} else {
-			if ($this->menu->insertMenu($this->input->post('menu'))) {
-				$this->view->flash('success', 'New menu added', 'admin/menu');
-			} else {
-				$this->view->flash('danger', 'Add menu failed', 'admin/menu');
-			}
-		}
+	public function addNewMenu()
+	{
+		$this->menu->insertMenu($this->input->post('menu'));
+	}
+
+	// succcess flash
+	public function menuSuccess($message)
+	{
+		$result = str_replace('%20', ' ', $message);
+		$this->view->flash('success', $result, 'admin/menu');
+	}
+
+	public function addNewSubmenu()
+	{
+		$this->menu->insertNewSubmenu(
+			$this->input->post('menu'),
+			$this->input->post('submenu'),
+			$this->input->post('url'),
+			$this->input->post('icon')
+		);
+	}
+
+	public function accessCheckFromAjax()
+	{
+		$menuId = $this->input->post('menuId');
+		$roleId = $this->input->post('roleId');
+		echo $this->menu->check_menu_access($menuId, $roleId);
+	}
+	public function accessMenu()
+	{
+		$this->menu->update_user_access($this->input->post('roleData'), $this->input->post('menuId'));
 	}
 
 	public function deleteMenu($menuId)
 	{
-		if ($this->menu->deleteMenu($menuId)) {
+		if (!$this->menu->deleteMenu($menuId)) {
 			$this->view->flash('success', 'Menu Deleted', 'admin/menu');
 		}
 	}
 
-	public function editMenu($menuId)
+	public function getDataforEditMenu($data)
 	{
-		$data['title'] = 'Edit Menu';
-		$data['user'] = $this->user->getUser($this->session->userdata('username'));
-		$data['menu'] = $this->menu->getAllMenu();
+		$result = $this->menu->idMenutoName($this->input->post('menu'));
+		echo $result[$data];
+	}
+	public function getDataforEditSubmenu($data)
+	{
+		$result = $this->menu->idSubmenutoData($this->input->post('submenuId'));
+		echo $result[$data];
+	}
 
-		$this->form_validation->set_rules('menu', 'Menu', 'required');
+	public function editMenu()
+	{
+		$menuId = $this->input->post('menuId');
+		$menuBaru = $this->input->post('menuTitle');
+		$this->menu->editMenu($menuBaru, $menuId);
+	}
 
-		if ($this->form_validation->run() == false) {
-			$this->view->getDefault($data, 'admin/editMenu');
-		} else {
-			$menuBaru = $this->input->post('menu');
-			if ($this->menu->editMenu($menuBaru, $menuId)) {
-				$this->view->flash('success', 'Menu Edited', 'admin/menu');
-			} else {
-				$this->view->flash('danger', 'Something wrong', 'admin/menu/');
-			}
+	public function editSubmenu()
+	{
+		$this->menu->editSubmenuData(
+			$this->input->post('submenuId'),
+			$this->input->post('submenuTitle'),
+			$this->input->post('submenuUrl'),
+			$this->input->post('submenuIcon')
+		);
+	}
+
+	public function deleteSubmenu($submenuId)
+	{
+		if (!$this->menu->deleteSubmenu($submenuId)) {
+			$this->view->flash('success', 'Submenu Deleted', 'admin/menu');
 		}
 	}
 
-	// public function submenu()
-	// {
-	// 	$data['title'] = 'Submenu Management';
-	// 	$email = $this->session->userdata('email');
-	// 	$data['user'] = $this->db->query("SELECT * FROM user WHERE email = '$email'")->row_array();
-
-	// 	$this->load->model('Menu_model', 'menu');
-	// 	$data['subMenu'] = $this->menu->getSubMenu();
-	// 	$data['menu'] = $this->db->query("SELECT * FROM `user_menu`")->result_array();
-
-	// 	$this->form_validation->set_rules('title', 'Title', 'required');
-	// 	$this->form_validation->set_rules('menu_id', 'Menu', 'required');
-	// 	$this->form_validation->set_rules('url', 'URL', 'required');
-	// 	$this->form_validation->set_rules('icon', 'icon', 'required');
-
-	// 	if ($this->form_validation->run() == false) {
-	// 		$this->view->getDefault($data, 'manage/submenu');
-	// 	} else {
-	// 		$data = [
-	// 			'menu_id' => $this->input->post('menu_id'),
-	// 			'title' => $this->input->post('title'),
-	// 			'url' => $this->input->post('url'),
-	// 			'icon' => $this->input->post('icon'),
-	// 			'is_active' => $this->input->post('is_active')
-	// 		];
-
-	// 		//query
-	// 		$query = "INSERT INTO `user_sub_menu` VALUES (" . "NULL, '" . implode("', '", $data) . "')";
-	// 		$this->db->query($query);
-	// 		$this->view->flash('success', 'New submenu added', 'manage/submenu');
-	// 	}
-	// }
-
+	public function switchActiveSubMenu()
+	{
+		$submenuId = $this->input->post('submenuId');
+		if ($this->menu->check_active_submenu($submenuId)) {
+			$this->menu->activateSubmenu();
+		} else {
+			$this->menu->deactivateSubmenu();
+		}
+	}
 
 	// public function editsubmenu($submenuId)
 	// {

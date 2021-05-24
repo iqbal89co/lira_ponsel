@@ -80,3 +80,6 @@ INSERT INTO sub_menu VALUES
 
 INSERT INTO user_access_menu VALUES
 (NULL, 1, 4);
+
+ALTER TABLE sub_menu
+MODIFY title VARCHAR(40) NOT NULL UNIQUE;

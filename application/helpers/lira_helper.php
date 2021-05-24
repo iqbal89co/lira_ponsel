@@ -7,3 +7,14 @@ function is_logged_in()
 		redirect('auth');
 	}
 }
+
+function check_active_submenu($submenu_id)
+{
+	$ci = get_instance();
+
+	$result = $ci->db->query("SELECT is_active FROM `sub_menu` WHERE `id` = $submenu_id");
+
+	if ($result->num_rows() > 0) {
+		return "checked='checked'";
+	}
+}
