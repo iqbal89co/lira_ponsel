@@ -83,3 +83,5 @@ INSERT INTO user_access_menu VALUES
 
 ALTER TABLE sub_menu
 MODIFY title VARCHAR(40) NOT NULL UNIQUE;
+
+alter table;
