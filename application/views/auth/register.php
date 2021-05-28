@@ -18,24 +18,27 @@
 									</div>
 									<form class="user" method="POST" action="<?= base_url('auth/register') ?>">
 										<div class="form-group">
-											<input type="text" name="nama" class="form-control form-control-user" placeholder="Name">
+											<input type="text" name="username" class="form-control form-control-user" placeholder="Enter Username">
 										</div>
 										<div class="form-group">
-											<input type="text" name="username" class="form-control form-control-user" placeholder="Username">
+											<input type="password" name="password" class="form-control form-control-user" placeholder="Password">
 										</div>
 										<div class="form-group">
-											<input type="number" min="1" max="3" name="role" class="form-control form-control-user" placeholder="Role">
+											<input type="number" name="role" class="form-control form-control-user" placeholder="Enter role">
+										</div>
+										<div class="form-group">
+											<input type="text" name="nama" class="form-control form-control-user" placeholder="Nama">
 										</div>
 										
-										<div class="form-group row">
+									<!-- 	<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
 										<input type="password" class="form-control form-control-user" id="password" name="password1" placeholder="Password">
-										<?= form_error('password1', '<small class="text-danger pl-3">', '</small>'); ?>
+										
 									</div>
 									<div class="col-sm-6">
 										<input type="password" class="form-control form-control-user" id="password2" name="password2" placeholder="Repeat Password">
 									</div>
-								</div>
+								</div> -->
 										<button class="btn btn-primary btn-user btn-block">
 											Register
 										</button>
