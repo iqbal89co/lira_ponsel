@@ -14,7 +14,7 @@ class Pendataan extends CI_Controller
 		$data['title'] = 'Data Cabang';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$id = $data['user']['id'];
-		$data['datacabang'] = $this->db->query("SELECT `id`,`nama_toko`,`alamat` FROM `data_cabang` WHERE `id` <> $id AND `user_id`=3")->result_array();
+		$data['datacabang'] = $this->db->query("SELECT `id`,`nama_toko`,`alamat` FROM `data_cabang` WHERE `id` <> $id ")->result_array();
 
 
 		$this->view->getDefault($data, 'pendataan/datacabang');
@@ -27,13 +27,12 @@ class Pendataan extends CI_Controller
 
 		$this->view->getDefault($data, 'pendataan/infocabang');
 	}
-	public function TambahCabang()
+	public function addCabang()
 	{
-		$data['title'] = 'Tambah Cabang';
-		$data['user'] = $this->user->getUser($this->session->userdata('username'));
-		$data['datacabang'] = $this->db->query("SELECT `id`,`nama_toko`,`alamat` FROM `data_cabang` WHERE `id`=$datacabangId")->row_array();
-
-		$this->view->getDefault($data, 'pendataan/infocabang');
+		$this->menu->insertNewCabang(
+			$this->input->post('menu'),
+			
+		);
 	}
 
 	public function DataStokCabang()
