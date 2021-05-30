@@ -41,7 +41,7 @@ class Admin extends CI_Controller
 	public function addNewSubmenu()
 	{
 		$this->menu->insertNewSubmenu(
-			$this->input->post('menu'),
+			$this->input->post('mennu'),
 			$this->input->post('submenu'),
 			$this->input->post('url'),
 			$this->input->post('icon')

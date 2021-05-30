@@ -6,6 +6,7 @@ class Pendataan extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model("Pendataan_model","pendataan");
 		is_logged_in();
 	}
 
@@ -19,6 +20,23 @@ class Pendataan extends CI_Controller
 
 		$this->view->getDefault($data, 'pendataan/datacabang');
 	}
+	public function tambahCabangBaru()
+	{
+			$this->pendataan->insertCabangBaru(
+			$this->input->post('addUserId'),
+			$this->input->post('addNamaToko'),
+			$this->input->post('addAlamat')
+		);
+			redirect('pendataan/datacabang');
+	}
+
+	public function deleteCabang($datacabangId)
+	{
+		// if (!$this->pendataan->deleteCabang($datacabangId)) {
+			$this->view->flash('success', 'Cabang Deleted', 'pendataan/datacabang');
+		// }
+	}
+
 	public function InfoCabang($datacabangId)
 	{
 		$data['title'] = 'Info Cabang';
@@ -27,18 +45,13 @@ class Pendataan extends CI_Controller
 
 		$this->view->getDefault($data, 'pendataan/infocabang');
 	}
-	public function addCabang()
-	{
-		$this->menu->insertNewCabang(
-			$this->input->post('menu'),
-			
-		);
-	}
-
+	
 	public function DataStokCabang()
 	{
 		$data['title'] = 'Data Stok Cabang';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+		$id = $data['user']['id'];
+		$data['stokcabang'] = $this->db->query("SELECT `id`,`nama_barang`,`jumlah`  FROM `barang` WHERE `id` <> $id ")->result_array();
 
 		$this->view->getDefault($data, 'pendataan/datastokcabang');
 	}

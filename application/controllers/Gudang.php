@@ -20,6 +20,8 @@ class Gudang extends CI_Controller
 	{
 		$data['title'] = 'Kategori';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+		$id = $data['user']['id'];
+		$data['kategori'] = $this->db->query("SELECT `id_kategori`,`kategori` FROM `kategori` WHERE `id_kategori` <> $id AND `id_kategori`=1  ")->result_array();
 
 		$this->view->getDefault($data, 'gudang/kategori');
 	}
