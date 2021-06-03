@@ -8,6 +8,7 @@
  		</div>
  		<div class="row">
 
+<<<<<<< HEAD
  			<?php foreach ($kategori as $k) : ?>
  				<div class="col-xl-3 col-md-6 mb-4" type="button" data-toggle="collapse" data-target="#collapse<?= $k['id_kategori'] ?>" aria-expanded="false" aria-controls="collapse<?= $k['id_kategori'] ?>">
  					<div class="card border-bottom-primary shadow h-100 py-2">
@@ -23,6 +24,36 @@
  						</div>
  					</div>
  				</div>
+=======
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-bottom-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">  
+                <div class="col-lg">
+                   <br>
+ <?php
+                   $i = 1;
+                   foreach ($kategori as $k) :
+                    ?>
+ <span><?= $k['kategori'] ?></span></a> 
+                      </div> 
+
+  <br>
+                      <?php
+                  endforeach;
+                  ?>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-phone fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+>>>>>>> 1602fa4e1770f7cfed53d4f01c1e376829215c4f
 
  				<div class="collapse" id="collapse<?= $k['id_kategori'] ?>">
  					<div class="card card-body mb-3">
