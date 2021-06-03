@@ -83,3 +83,15 @@ INSERT INTO user_access_menu VALUES
 
 ALTER TABLE sub_menu
 MODIFY title VARCHAR(40) NOT NULL UNIQUE;
+
+ALTER TABLE kategori
+ADD icon VARCHAR(60) DEFAULT 'fa-closed-captioning';
+
+CREATE TABLE stok_barang(
+	id INT AUTO_INCREMENT,
+	id_cabang INT,
+	id_barang INT,
+	jumlah_etalase INT,
+	jumlah_gudang INT,
+	PRIMARY KEY(id)
+);

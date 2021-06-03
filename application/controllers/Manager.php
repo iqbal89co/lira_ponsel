@@ -15,4 +15,18 @@ class Manager extends CI_Controller
 
 		$this->view->getDefault($data, 'manager/dashboard');
 	}
+	public function penjualan()
+	{
+		$data['title'] = 'data penjualan';
+		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+
+		$this->view->getDefault($data, 'manager/penjualan');
+	}
+	public function kasir()
+	{
+		$data['title'] = 'kasir';
+		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+
+		$this->view->getDefault($data, 'manager/kasir');
+	}
 }

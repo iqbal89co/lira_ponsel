@@ -30,7 +30,6 @@ class Auth extends CI_Controller
 	{
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
-		$this->load->model('User_model', 'user');
 		$user = $this->user->getUser($username);
 
 		if ($user) {

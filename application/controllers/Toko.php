@@ -10,7 +10,7 @@ class Toko extends CI_Controller
 	}
 	public function index()
 	{
-		$data['title'] = 'Dashboard';
+		$data['title'] = 'dashboard toko';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 
 		$this->view->getDefault($data, 'toko/dashboard');
