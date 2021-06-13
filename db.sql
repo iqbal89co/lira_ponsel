@@ -95,3 +95,10 @@ CREATE TABLE stok_barang(
 	jumlah_gudang INT,
 	PRIMARY KEY(id)
 );
+
+CREATE OR REPLACE VIEW ringkasan_transaksi AS
+SELECT CONCAT('INV', YEAR(tanggal_pembelian), '-', id_pembelian) AS invoice,
+		id_pembelian, nama_pelanggan, SUM(jumlah*harga) AS total_pembelian, tanggal_pembelian, id_cabang
+		FROM penjualan 
+		GROUP BY tanggal_pembelian
+		ORDER BY tanggal_pembelian;

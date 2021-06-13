@@ -7,13 +7,14 @@ class Penjualan extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('Penjualan_model', 'jual');
+		$this->load->model('Gudang_model', 'gudang');
 		is_logged_in();
 	}
 	public function Kasir()
 	{
 		$data['title'] = 'Kasir';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
-		$data['kategori'] = $this->jual->getAllKategori();
+		$data['kategori'] = $this->gudang->getAllKategori();
 		$data['cabang'] = $this->user->getCabang($data['user']['id']);
 		$data['barang'] = $this->jual->getAllBarang($data['cabang']['id']);
 
@@ -39,12 +40,23 @@ class Penjualan extends CI_Controller
 		echo $hasil['jumlah_etalase'] + $hasil['jumlah_gudang'];
 	}
 
-	public function data()
+	public function dataPenjualan()
 	{
 		$data['title'] = 'data penjualan';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+		$data['cabang'] = $this->user->getCabang($data['user']['id']);
+		$data['order_sum'] = $this->jual->getOrderSum($data['cabang']['id']);
 
-		$this->view->getDefault($data, 'penjualan/data');
+		$this->view->getDefault($data, 'penjualan/data_penjualan');
+	}
+	public function detailPerPenjualan()
+	{
+		echo json_encode($this->jual->getPerOrder($this->input->post('id')));
+	}
+	public function deletePenjualan($id)
+	{
+		$this->jual->deletePenjualan($id);
+		$this->view->flash('success', 'Penjualan Berhasil Dihapus', 'penjualan/dataPenjualan');
 	}
 	public function generateStock()
 	{
@@ -58,7 +70,11 @@ class Penjualan extends CI_Controller
 		$cabang = $this->user->getCabang($user['id']);
 		$data['json'] = $this->input->post('jsonData');
 		$phpArr = (array)json_decode($data['json']);
-		$dateNow = date("Y-m-d h:i:s");
+		$idPembelian = uniqid();
+		while (!$this->jual->cekIdPembelian($idPembelian)) {
+			$idPembelian = uniqid();
+		}
+		$dateNow = date("Y-m-d H:i:s");
 		foreach ($phpArr as $p) {
 			if (gettype($p) == "object") {
 				echo $this->jual->putReceiptToDB(
@@ -67,7 +83,8 @@ class Penjualan extends CI_Controller
 					$p->id_barang,
 					$p->jumlah,
 					$p->harga,
-					$dateNow
+					$dateNow,
+					$idPembelian
 				);
 			}
 		}

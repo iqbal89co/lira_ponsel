@@ -2,11 +2,11 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 	<!-- Sidebar - Brand -->
-	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url() ?>">
 		<div class="sidebar-brand-icon rotate-n-15">
-			<i class="fas fa-laugh-wink"></i>
+			<i class="fas fa-store"></i>
 		</div>
-		<div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+		<div class="sidebar-brand-text mx-3">Lira Ponsel</div>
 	</a>
 
 	<!-- Divider -->
@@ -32,7 +32,7 @@
 					<li class="nav-item">
 					<?php endif; ?>
 					<a class="nav-link pb-0" href="<?= base_url($sm['url']); ?>">
-						<i class="fas fa-fw <?= $sm['icon'] ?>"></i>
+						<i class="fa-fw <?= $sm['icon'] ?>"></i>
 						<span><?= $sm['title'] ?></span>
 					</a>
 					</li>

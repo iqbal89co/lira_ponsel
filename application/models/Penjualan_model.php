@@ -3,12 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Penjualan_model extends CI_Model
 {
-	public function getAllKategori()
-	{
-		$query = "SELECT * FROM `kategori`";
-		return $this->db->query($query)->result_array();
-	}
-
 	public function getAllBarang($cabangId)
 	{
 		$query = "SELECT `barang`.`id`, `nama_barang`, `kategori`, `icon`, `harga`, `jumlah_etalase`, `jumlah_gudang`
@@ -52,10 +46,10 @@ class Penjualan_model extends CI_Model
 		WHERE `barang`.`kategori_id` = '$kategori'";
 		return $this->db->query($query)->result_array();
 	}
-	public function putReceiptToDB($pelanggan, $cabang, $idBarang, $jumlah, $harga, $tanggal)
+	public function putReceiptToDB($pelanggan, $cabang, $idBarang, $jumlah, $harga, $tanggal, $idPembelian)
 	{
 		$query = "INSERT INTO `penjualan` VALUES
-		(NULL, '$pelanggan', $cabang, $idBarang, $jumlah, $harga, '$tanggal')";
+		(NULL, '$idPembelian', '$pelanggan', $cabang, $idBarang, $jumlah, $harga, '$tanggal')";
 		$this->db->query($query);
 	}
 	public function generateStock($id_cabang, $id_barang, $jlh_etalase, $jlh_gudang)
@@ -63,5 +57,44 @@ class Penjualan_model extends CI_Model
 		$query = "INSERT INTO stok_barang VALUES 
 		(NULL, $id_cabang, $id_barang, $jlh_etalase, $jlh_gudang)";
 		$this->db->query($query);
+	}
+	public function getCheckoutSummary($cabangId)
+	{
+		$query = "SELECT * FROM ringkasan_transaksi WHERE id_cabang=$cabangId";
+		return $this->db->query($query)->result_array();
+	}
+	public function cekIdPembelian($id)
+	{
+		$query = "SELECT invoice FROM ringkasan_transaksi WHERE id_pembelian='$id'";
+		if ($this->db->query($query)->num_rows() > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	public function deletePenjualan($id)
+	{
+		$query = "DELETE FROM penjualan WHERE id_pembelian='$id'";
+		$this->db->query($query);
+	}
+	public function getOrderSum($cabangId)
+	{
+		$query = "SELECT * FROM ringkasan_transaksi WHERE id_cabang=$cabangId";
+		return $this->db->query($query)->result_array();
+	}
+	public function getPerOrder($id)
+	{
+		$query = "SELECT barang.nama_barang, penjualan.jumlah, penjualan.harga
+		FROM penjualan
+		JOIN barang ON penjualan.id_barang=barang.id
+		WHERE id_pembelian='$id'";
+		return $this->db->query($query)->result();
+	}
+	public function totalJual($cabangId)
+	{
+		$query = "SELECT SUM(total_pembelian) AS total
+		FROM ringkasan_transaksi
+		WHERE id_cabang=$cabangId";
+		return $this->db->query($query)->row_array();
 	}
 }

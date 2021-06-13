@@ -1,178 +1,130 @@
- 
-<div class="container">
-  <!-- Begin Page Content -->
-  <div class="container-fluid">
+<div class="mx-5 my-2 d-sm-flex align-items-center justify-content-between mb-4">
+	<h1 class="h3 mb-0 text-gray-800">Data stok barang</h1>
+</div>
+<div class="jumbotron mx-5 pt-4">
+	<div>
+		<button class="btn btn-warning mb-3 float-right" style="display:block;" id="editStokBarang"><b>Edit Stok Barang</b></button>
+		<button type="button" class="btn btn-secondary mb-3 float-right" style="display:none;" id="closeEditStok">Close</button>
+		<button id="submitEditStok" type="button" class="btn btn-primary mb-3 float-right" style="display:none;">Submit</button>
+	</div>
+	<table class="table table-hover" id="table-stok">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Nama Barang</th>
+				<th>Kategori</th>
+				<th>Harga</th>
+				<th>Stok di Etalase</th>
+				<th>Stok di Gudang</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php $i = 1;
+			foreach ($stok as $s) : ?>
+				<tr>
+					<td><?= $i ?></td>
+					<th><?= $s['nama_barang'] ?></th>
+					<td><?= $s['kategori'] ?></td>
+					<td><?= $s['harga'] ?></td>
+					<td>
+						<div class="jlhEtalase" data-id="<?= $s['id'] ?>" data-jlh="<?= $s['jumlah_etalase'] ?>">
+							<?= $s['jumlah_etalase'] ?>
+						</div>
+					</td>
+					<td>
+						<div class="jlhGudang" data-id="<?= $s['id'] ?>" data-jlh="<?= $s['jumlah_etalase'] ?>">
+							<?= $s['jumlah_gudang'] ?>&nbsp;
+						</div>
+					</td>
+				</tr>
+			<?php $i++;
+			endforeach; ?>
+			<input type="number" id="banyakBarang" value="<?= $i - 1 ?>" hidden>
+		</tbody>
+	</table>
+</div>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$(document).ready(function() {
+			$('#table-stok').DataTable({
+				"paging": false,
+				"bFilter": false
+			});
+		});
 
-    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Stok Barang</h1>
-                    </div>
+		function finishUpdateStok() {
+			document.location.href = "<?= base_url('gudang/stokbarang'); ?>";
+		}
+		$(document).on('click', '#submitEditStok', function() {
+			let data = [];
+			$('.jlhEtalase').each(function() {
+				let id = $(this).data('id');
+				let jumlah_etalase = Number($(this).children().val());
+				let gudang = $('.jlhGudang[data-id=' + id + ']').children();
+				let jumlah_gudang = Number($(gudang).val());
+				if (jumlah_etalase > 0 || jumlah_gudang > 0) {
+					let jumlah = {
+						id: id,
+						jumlah_etalase: jumlah_etalase,
+						jumlah_gudang: jumlah_gudang
+					}
+					data.push(jumlah);
+				}
+			});
+			$.ajax({
+				url: "<?= base_url('gudang/updateStok') ?>",
+				type: "POST",
+				data: {
+					json: JSON.stringify(data)
+				},
+				dataType: "JSON",
+				success: function(data) {
+					location.reload();
+				}
+			})
 
-<!-- Begin Page Content -->
-                <div class="container-fluid">
+		});
+		$(document).on('click', '#submitEditStok, #closeEditStok', function() {
+			$('#editStokBarang').show();
+			$('#submitEditStok, #closeEditStok').hide();
+			$('.jlhEtalase').each(function() {
+				let ini = $(this);
+				let id = $(this).data('id');
+				let jumlah_etalase = $(this).children().val();
+				$(ini).text(jumlah_etalase);
+			});
+			$('.jlhGudang').each(function() {
+				let ini = $(this);
+				let id = $(this).data('id');
+				let jumlah_gudang = $(this).children().val();
+				$(ini).text(jumlah_gudang);
+			});
+		});
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                        For more information about DataTables, please visit the <a target="_blank"
-                            href="https://datatables.net">official DataTables documentation</a>.</p>
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>63</td>
-                                            <td>2011/07/25</td>
-                                            <td>$170,750</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ashton Cox</td>
-                                            <td>Junior Technical Author</td>
-                                            <td>San Francisco</td>
-                                            <td>66</td>
-                                            <td>2009/01/12</td>
-                                            <td>$86,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Senior Javascript Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>22</td>
-                                            <td>2012/03/29</td>
-                                            <td>$433,060</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>63</td>
-                                            <td>2011/07/25</td>
-                                            <td>$170,750</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ashton Cox</td>
-                                            <td>Junior Technical Author</td>
-                                            <td>San Francisco</td>
-                                            <td>66</td>
-                                            <td>2009/01/12</td>
-                                            <td>$86,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Senior Javascript Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>22</td>
-                                            <td>2012/03/29</td>
-                                            <td>$433,060</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>63</td>
-                                            <td>2011/07/25</td>
-                                            <td>$170,750</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ashton Cox</td>
-                                            <td>Junior Technical Author</td>
-                                            <td>San Francisco</td>
-                                            <td>66</td>
-                                            <td>2009/01/12</td>
-                                            <td>$86,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Senior Javascript Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>22</td>
-                                            <td>2012/03/29</td>
-                                            <td>$433,060</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+		$(document).on('click', '#editStokBarang', function() {
+			$(this).hide();
+			$('#submitEditStok, #closeEditStok').show();
+			const banyakBarang = $('#banyakBarang').val();
+			$('.jlhEtalase').each(function() {
+				let ini = $(this);
+				let id = $(this).data('id');
+				let jumlah_etalase = $(this).data('jlh');
+				$(ini).empty();
+				$(ini).append('<input min="0" type="number" value="' + jumlah_etalase + '">');
+			});
+			$('.jlhGudang').each(function() {
+				let ini = $(this);
+				let id = $(this).data('id');
+				let jumlah_gudang = $(this).data('jlh');
+				$(this).empty();
+				$(ini).append('<input min="0" type="number" value="' + jumlah_gudang + '">');
+			});
 
-                </div>
-                <!-- /.container-fluid -->
+		});
 
-            </div>
-            <!-- End of Main Content -->
+
+
+	});
+</script>
