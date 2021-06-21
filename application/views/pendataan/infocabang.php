@@ -6,10 +6,14 @@
 		<div class="card shadow mb-4" style="max-width: 600px; margin: 0 auto; /* Added */
         float: none; /* Added */
         margin-bottom: 10px;">
-			<div class="card-header py-3 text-center">
 
-				<h3 class="m-0 font-weight-bold text-info"><?= $title ?></h3>
+			<div class="card-header py-3">
+				<a type="button" class="fas fa-fw fa-arrow-left float-left" href="<?= base_url('pendataan/datacabang/') ?>"></a><span>
+					<h4 class="m-0 font-weight-bold text-primary" style="text-align: center;"><?= $title ?></h4>
+				</span>
 			</div>
+
+
 			<div class="card-body">
 				<div>
 					<div class="card-body">
@@ -20,8 +24,8 @@
 										<h5>Info </h5>
 									</tr>
 									<tr>
-										<td>User Id:</td>
-										<td><?= $datacabang['user_id']; ?></td>
+										<td>Nama User Toko:</td>
+										<td><?= $datacabang['name']; ?></td>
 									</tr>
 									<tr>
 										<td>Nama Toko:</td>
@@ -35,12 +39,24 @@
 										<td>Nomor Toko:</td>
 										<td><?= $datacabang['no_telp']; ?></td>
 									</tr>
+									<tr>
+										<td>Data Penjualan Cabang:</td>
+										<td><a class="btn btn-outline-primary" href="<?= base_url('pendataan/penjualanCSV/' . $datacabang['id']) ?>">Export CSV</< /a>
+										</td>
+									</tr>
 								</table>
 							</div>
 						</table>
 	</form>
-	<a id="deleteCabang" class="badge bg-danger text-light" data-toggle="modal" data-target="#deleteCabangModal" data-cabang="<?= $datacabang['nama_toko'] ?>" data-id="<?= $datacabang['id'] ?>">DELETE</a>
-	<a id="editCabang" class="badge bg-success text-light" data-toggle="modal" data-target="#editCabangModal" data-id="<?= $datacabang['id'] ?>" data-user="<?= $datacabang['user_id'] ?>" data-cabang="<?= $datacabang['nama_toko'] ?>" data-alamat="<?= $datacabang['alamat'] ?>" data-nama="<?= $datacabang['name'] ?>">EDIT</a>
+
+
+
+
+	<a id="deleteCabang" type="button" class="btn btn-danger mb-3 =" data-toggle="modal" data-target="#deleteCabangModal" data-cabang="<?= $datacabang['nama_toko'] ?>" data-id="<?= $datacabang['id'] ?>">DELETE</a>
+
+
+
+	<a id="editCabang" type="button" class="btn btn-warning mb-3 =" data-toggle="modal" data-target="#editCabangModal" data-id="<?= $datacabang['id'] ?>" data-user="<?= $datacabang['user_id'] ?>" data-cabang="<?= $datacabang['nama_toko'] ?>" data-alamat="<?= $datacabang['alamat'] ?>" data-nama="<?= $datacabang['name'] ?>">EDIT</a>
 </div>
 </div>
 </div>
@@ -59,7 +75,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<a href="" id="deleteCabangButton" class="btn btn-info">Delete</a>
+				<a href="" id="deleteCabangButton" class="btn btn-danger">Delete</a>
 			</div>
 		</div>
 	</div>
@@ -77,12 +93,12 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<input type="number" id="editCabangId" hidden disabled required>
+					<input type="number" id="editCabangId" value="<?= $datacabang['id'] ?>" hidden>
 					<label for="editCabangTitle">Edit Cabang</label>
 					<select class="form-control" id="editUseridTitle">
-						<option id="editUserId" selected></option>
-						<?php foreach ($layanan as $l) { ?>
-							<option value="<?php echo $datacabang['user_id']; ?>"><?php echo $l['name']; ?> </option>
+						<option value="<?= $datacabang['user_id']; ?>"><?= $datacabang['name']; ?> </option>
+						<?php foreach ($availableUser as $l) { ?>
+							<option value="<?php echo $l['id']; ?>"><?php echo $l['name']; ?> </option>
 						<?php } ?>
 					</select>
 					<input type="text" class="form-control my-2" id="editCabangTitle" placeholder="Nama Cabang" required>
@@ -91,7 +107,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button id="editCabangForm" type="button" class="btn btn-info">Save changes</button>
+				<button id="editCabangForm" type="button" class="btn btn-primary">Save changes</button>
 			</div>
 		</div>
 	</div>
@@ -102,7 +118,7 @@
 	//edit cabang modal form
 	$(document).on('click', '#editCabangForm', function() {
 		let CabangId = $('#editCabangId').val();
-		let UserId = $('#editUserId').val();
+		let UserId = $('#editUseridTitle').val();
 		let CabangTitle = $('#editCabangTitle').val();
 		let CabangAlamat = $('#editCabangAlamat').val();
 		let nama = $('#editUserId').text();

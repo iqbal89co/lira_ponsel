@@ -295,8 +295,6 @@
 						<div id="backToShop" class="back-to-shop"><a>&leftarrow;</a><span class="text-muted">Back to shop</span></div>
 						<button type="submit" id="btnCheckout" class="btn btn-primary btn-block">Proceed</button>
 					</form>
-
-
 				</div>
 			</div>
 		</div>
@@ -313,8 +311,8 @@
 				<div class="row">
 					<div class="col align-self-center text-right text-muted">
 						<div class="input-group mb-3 w-50" style="margin-left: 50%;">
-							<input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-							<div style="cursor:pointer;" class="input-group-append">
+							<input type="text" class="searchText form-control" aria-label="Amount (to the nearest dollar)">
+							<div style="cursor:pointer;" class="searchSubmit input-group-append">
 								<span class="input-group-text"><i class="fas fa-search"></i></span>
 							</div>
 						</div>
@@ -370,6 +368,35 @@
 <script>
 	$(document).ready(function() {
 
+		// search
+		$(document).on('click', '.searchSubmit', function() {
+			let search = $('.searchText').val();
+			$('.isiBarang').remove();
+			$.ajax({
+				url: "<?= base_url('penjualan/getBarangSearch') ?>",
+				type: "POST",
+				data: {
+					search: search
+				},
+				dataType: "json",
+				success: function(data) {
+					let banned = $('.banned');
+					for (i in data) {
+						let lolos = 1;
+						for (let j = 0; j < banned.length; j++) {
+							if (data[i].id == $(banned[j]).data('idbarang')) {
+								lolos = 0;
+							}
+						}
+						if (lolos == 1) {
+							$('#kumpulanBarang').append(
+								'<div id="barang' + data[i].id + '" class="isiBarang card m-2" data-idbarang="' + data[i].id + '" data-kategori="' + data[i].kategori + '" data-namabarang="' + data[i].nama_barang + '" data-hargabarang="' + data[i].harga + '" data-icon="' + data[i].icon + '" data-jlhbarang="' + (Number(data[i].jumlah_etalase) + Number(data[i].jumlah_gudang)) + '" style="width: 11rem; height: 12rem; display: inline-block;" title="' + data[i].nama_barang + '"><i class="my-3 fas fa-fw fa-4x ' + data[i].icon + '"></i><div class="card-body"><b class="card-text" style="font-size:.8rem;color: black;">' + data[i].nama_barang.slice(0, 15) + '</b><p class="card-text">Rp ' + data[i].harga + '</p></div></div>'
+							);
+						}
+					}
+				}
+			});
+		});
 		// filter by kategori
 		<?php foreach ($kategori as $k) : ?>
 			$(document).on('click', '#kategori<?= $k['id_kategori'] ?>', function() {

@@ -32,7 +32,7 @@ class Gudang_model extends CI_Model
 		FROM stok_barang
 		LEFT JOIN barang ON stok_barang.id_barang=barang.id
 		JOIN kategori ON barang.kategori_id=kategori.id_kategori
-		WHERE stok_barang.id_cabang=3
+		WHERE stok_barang.id_cabang=$cabangId
 		UNION
 		SELECT barang.id, nama_barang, kategori, harga, 0 as jumlah_etalase, 0 as jumlah_gudang
 		FROM barang

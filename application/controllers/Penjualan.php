@@ -12,7 +12,7 @@ class Penjualan extends CI_Controller
 	}
 	public function Kasir()
 	{
-		$data['title'] = 'Kasir';
+		$data['title'] = 'kasir';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$data['kategori'] = $this->gudang->getAllKategori();
 		$data['cabang'] = $this->user->getCabang($data['user']['id']);
@@ -26,6 +26,12 @@ class Penjualan extends CI_Controller
 		$cabang = $this->user->getCabang($user['id']);
 		echo json_encode($this->jual->filterByKategori($this->input->post('kategoriId'), $cabang['id']));
 	}
+	public function getBarangSearch()
+	{
+		$user = $this->user->getUser($this->session->userdata('username'));
+		$cabang = $this->user->getCabang($user['id']);
+		echo json_encode($this->jual->searchBarang($this->input->post('search'), $cabang['id']));
+	}
 	public function getAllBarang()
 	{
 		$user = $this->user->getUser($this->session->userdata('username'));
@@ -37,7 +43,7 @@ class Penjualan extends CI_Controller
 		$user = $this->user->getUser($this->session->userdata('username'));
 		$cabang = $this->user->getCabang($user['id']);
 		$hasil = $this->jual->getJumlahBarang($this->input->post('idBarang'), $cabang['id']);
-		echo $hasil['jumlah_etalase'] + $hasil['jumlah_gudang'];
+		echo $hasil['jumlah_etalase'];
 	}
 
 	public function dataPenjualan()
@@ -46,6 +52,7 @@ class Penjualan extends CI_Controller
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$data['cabang'] = $this->user->getCabang($data['user']['id']);
 		$data['order_sum'] = $this->jual->getOrderSum($data['cabang']['id']);
+		$data['order_history'] = $this->jual->getLogOrder($data['cabang']['id']);
 
 		$this->view->getDefault($data, 'penjualan/data_penjualan');
 	}
@@ -53,10 +60,24 @@ class Penjualan extends CI_Controller
 	{
 		echo json_encode($this->jual->getPerOrder($this->input->post('id')));
 	}
+	public function detailLogPerPenjualan()
+	{
+		echo json_encode($this->jual->getLogPerOrder($this->input->post('id')));
+	}
 	public function deletePenjualan($id)
 	{
 		$this->jual->deletePenjualan($id);
 		$this->view->flash('success', 'Penjualan Berhasil Dihapus', 'penjualan/dataPenjualan');
+	}
+	public function deleteLogPenjualan($id)
+	{
+		$this->jual->deleteLogPenjualan($id);
+		$this->view->flash('success', 'Penjualan Berhasil Dihapus Permanen', 'penjualan/dataPenjualan');
+	}
+	public function restoreLogPenjualan($id)
+	{
+		$this->jual->restoreLogPenjualan($id);
+		$this->view->flash('success', 'Penjualan Berhasil Dikembalikan', 'penjualan/dataPenjualan');
 	}
 	public function generateStock()
 	{
@@ -77,7 +98,7 @@ class Penjualan extends CI_Controller
 		$dateNow = date("Y-m-d H:i:s");
 		foreach ($phpArr as $p) {
 			if (gettype($p) == "object") {
-				echo $this->jual->putReceiptToDB(
+				$this->jual->putReceiptToDB(
 					$this->input->post('nama_pelanggan'),
 					$cabang['id'],
 					$p->id_barang,
@@ -89,5 +110,26 @@ class Penjualan extends CI_Controller
 			}
 		}
 		$this->load->view('penjualan/struk', $data);
+	}
+	public function penjualanCSV()
+	{
+		$user = $this->user->getUser($this->session->userdata('username'));
+		$cabang = $this->user->getCabang($user['id']);
+		$penjualan = $this->jual->getOrderSum($cabang['id']);
+		$filename = 'penjualan' . date('Ymd') . '.csv';
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/csv; ");
+
+		// file creation 
+		$file = fopen('php://output', 'w');
+
+		$header = array("INVOICE", "ID PEMBELIAN", "NAMA PELANGGAN", "TOTAL PEMBELIAN", "TANGGAL PEMBELIAN", "ID CABANG");
+		fputcsv($file, $header);
+		foreach ($penjualan as $key => $line) {
+			fputcsv($file, $line);
+		}
+		fclose($file);
+		exit;
 	}
 }

@@ -28,8 +28,7 @@ class Pendataan_model extends CI_Model
 	public function editCabang($datacabangId, $UserId, $nama_toko, $alamat)
 	{
 		$query = "UPDATE `data_cabang` SET `user_id`=$UserId, `nama_toko`='$nama_toko', `alamat`='$alamat'
-
-		 WHERE `id`=$datacabangId";
+		WHERE `id`=$datacabangId";
 		$this->db->query($query);
 	}
 
@@ -56,5 +55,12 @@ class Pendataan_model extends CI_Model
 	{
 		$query = "SELECT SUM(total_pembelian) AS total FROM ringkasan_transaksi";
 		return $this->db->query($query)->row_array();
+	}
+	public function availableUser()
+	{
+		$query = "SELECT user.id, user.name FROM user
+		WHERE user.id NOT IN (SELECT `user_id` FROM data_cabang)
+		AND user.role_id=3";
+		return $this->db->query($query)->result_array();
 	}
 }

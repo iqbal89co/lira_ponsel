@@ -17,7 +17,11 @@
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
 									Penjualan</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800">Rp <?= $total_penjualan['total'] ?></div>
+								<?php if ($total_penjualan['total'] <= 0) { ?>
+									<div class="h5 mb-0 font-weight-bold text-gray-800">Rp 0</div>
+								<?php } else { ?>
+									<div class="h5 mb-0 font-weight-bold text-gray-800">Rp <?= $total_penjualan['total'] ?></div>
+								<?php } ?>
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
@@ -35,7 +39,11 @@
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
 									Barang di etalase</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_stok['total_etalase'] ?></div>
+								<?php if ($total_stok['total_etalase'] <= 0) { ?>
+									<div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+								<?php } else { ?>
+									<div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_stok['total_etalase'] ?></div>
+								<?php } ?>
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-chart-bar fa-2x text-gray-300"></i>
@@ -55,7 +63,11 @@
 								</div>
 								<div class="row no-gutters align-items-center">
 									<div class="col-auto">
-										<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= $total_stok['total_gudang'] ?></div>
+										<?php if ($total_stok['total_gudang'] <= 0) { ?>
+											<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">0</div>
+										<?php } else { ?>
+											<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= $total_stok['total_gudang'] ?></div>
+										<?php } ?>
 									</div>
 									<div class="col">
 										<div class="progress progress-sm mr-2">

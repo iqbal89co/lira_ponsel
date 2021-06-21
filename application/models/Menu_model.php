@@ -55,6 +55,8 @@ class Menu_model extends CI_Model
 	public function update_user_access($roleCode, $menuId)
 	{
 		$query1 = "DELETE FROM `user_access_menu` WHERE `menu_id`=$menuId";
+
+		$this->db->trans_start();
 		$this->db->query($query1);
 
 		$roleCleaned = str_split($roleCode);
@@ -83,6 +85,7 @@ class Menu_model extends CI_Model
 		if ($countChecked != 0) {
 			$this->db->query($query2);
 		}
+		$this->db->trans_complete();
 	}
 
 	public function editMenu($menuBaru, $menuId)
@@ -94,11 +97,13 @@ class Menu_model extends CI_Model
 	public function deleteMenu($menuId)
 	{
 		$query1 = "DELETE FROM `menu` WHERE `id` = $menuId";
-		$this->db->query($query1);
 		$query2 = "DELETE FROM `sub_menu` WHERE `menu_id` = $menuId";
-		$this->db->query($query2);
 		$query3 = "DELETE FROM `user_access_menu` WHERE `menu_id` = $menuId";
+		$this->db->trans_start();
+		$this->db->query($query1);
+		$this->db->query($query2);
 		$this->db->query($query3);
+		$this->db->trans_complete();
 	}
 
 	public function manageSubMenu($menuId)

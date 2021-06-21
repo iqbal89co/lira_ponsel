@@ -41,7 +41,7 @@ class Admin extends CI_Controller
 	public function addNewSubmenu()
 	{
 		$this->menu->insertNewSubmenu(
-			$this->input->post('mennu'),
+			$this->input->post('menu'),
 			$this->input->post('submenu'),
 			$this->input->post('url'),
 			$this->input->post('icon')
@@ -99,5 +99,80 @@ class Admin extends CI_Controller
 		if (!$this->menu->deleteSubmenu($submenuId)) {
 			$this->view->flash('success', 'Submenu Deleted', 'admin/menu');
 		}
+	}
+
+	public function manageuser()
+	{
+		$data['title'] = 'user management';
+		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+		$data['master'] = $this->user->ambilData();
+
+		$this->view->getDefault($data, 'admin/manageuser');
+	}
+
+	public function tambah_data()
+	{
+		$data['title'] = 'user management';
+		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+		$data['master'] = $this->user->ambilData();
+
+		$this->view->getDefault($data, 'admin/tambahdata');
+	}
+
+	public function proses_tambah_data()
+	{
+		$data =  [
+			'name' => $this->input->post('name'),
+			'username' => $this->input->post('username'),
+			'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+			'role_id' => $this->input->post('role'),
+			'is_active' => 1
+		];
+		$this->db->insert('user', $data);
+		$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Data Berhasil ditambah!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>');
+		redirect('Admin/manageuser');
+	}
+
+	public function hapus_data($id)
+	{
+
+		$this->db->where('id', $id);
+		$this->db->delete('user');
+		$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Data Berhasil dihapus!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>');
+
+		redirect('Admin/manageuser');
+	}
+
+	public function edit_data($id)
+	{
+		$data['title'] = 'user management';
+		$data['user'] = $this->user->getUser($this->session->userdata('username'));
+		$data['master'] = $this->user->ambil_id_user($id);
+
+
+		$this->view->getDefault($data, 'admin/editdata');
+	}
+
+	public function proses_edit_data()
+	{
+
+		$this->user->proses_edit_data();
+		$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Data Berhasil diedit!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>');
+		redirect('Admin/manageuser');
 	}
 }

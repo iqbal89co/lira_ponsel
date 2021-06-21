@@ -102,3 +102,42 @@ SELECT CONCAT('INV', YEAR(tanggal_pembelian), '-', id_pembelian) AS invoice,
 		FROM penjualan 
 		GROUP BY tanggal_pembelian
 		ORDER BY tanggal_pembelian;
+
+DELIMITER $$
+CREATE TRIGGER delete_penjualan
+BEFORE DELETE
+	ON penjualan
+	FOR EACH ROW
+BEGIN
+	INSERT INTO log_penjualan VALUES
+	(NULL, old.id_pembelian, old.nama_pelanggan, old.id_cabang,
+	old.id_barang, old.jumlah, old.harga, old.tanggal_pembelian);
+END $$
+		
+CREATE OR REPLACE VIEW log_transaksi AS
+SELECT CONCAT('INV', YEAR(tanggal_pembelian), '-', id_pembelian) AS invoice,
+		id_pembelian, nama_pelanggan, SUM(jumlah*harga) AS total_pembelian, tanggal_pembelian, id_cabang
+		FROM log_penjualan 
+		GROUP BY tanggal_pembelian
+		ORDER BY tanggal_pembelian;
+
+DELIMITER $$
+CREATE EVENT event1
+	ON SCHEDULE EVERY 1 MONTH
+	STARTS '2021-06-01 00:00:00'
+DO 
+BEGIN
+	INSERT INTO date_print VALUES
+	(NULL, NOW());
+END$$
+
+DELIMITER ;
+
+CREATE PROCEDURE substractStock
+(
+	@Barang INT,
+	@Cabang INT
+)
+AS
+BEGIN
+	IF (SELECT jumlah_etalase FROM stok_barang WHERE id_barang=@Barang AND id_cabang=@Cabang) > 0

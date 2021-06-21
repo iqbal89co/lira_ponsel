@@ -7,6 +7,8 @@ class Pendataan extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model("Pendataan_model", "pendataan");
+		$this->load->model('Penjualan_model', 'jual');
+		$this->load->model('Gudang_model', 'gudang');
 		is_logged_in();
 	}
 
@@ -23,14 +25,13 @@ class Pendataan extends CI_Controller
 		$data['title'] = 'Data Cabang';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$id = $data['user']['id'];
+		$data['availableUser'] = $this->pendataan->availableUser();
 		$data['datacabang'] = $this->db->query("SELECT `id`,`nama_toko`,`alamat` FROM `data_cabang` WHERE `id` <> $id ")->result_array();
-
 
 		$this->view->getDefault($data, 'pendataan/datacabang');
 	}
 	public function tambahCabangBaru()
 	{
-
 		$this->pendataan->insertCabangBaru(
 			$this->input->post('UserId'),
 			$this->input->post('NamaToko'),
@@ -57,19 +58,19 @@ class Pendataan extends CI_Controller
 			$this->input->post('UserId'),
 			$this->input->post('CabangTitle'),
 			$this->input->post('CabangAlamat'),
-			$this->input->post('nama')
 		);
 	}
 
 	public function InfoCabang($datacabangId)
 	{
-		$data['title'] = 'Info Cabang';
+		$data['title'] = 'Data Cabang';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
-		$data['datacabang'] = $this->db->query("SELECT `data_cabang`.`id`, `nama_toko`, `alamat`, `no_telp`, `user`.`id` AS `user_id`, `role_id`, `name`
+		$data['datacabang'] = $this->db->query("SELECT `data_cabang`.`id`, `nama_toko`, `alamat`, `no_telp`, `user`.`id` AS `user_id`, `user`.`name`, `role_id`, `name`
 		FROM `data_cabang`
 		JOIN `user`
 		ON `data_cabang`.`user_id`=`user`.`id` WHERE `data_cabang`.`id`=$datacabangId
 		")->row_array();
+		$data['availableUser'] = $this->pendataan->availableUser();
 		$data['layanan'] = $this->pendataan->tampilEdit();
 
 		$this->view->getDefault($data, 'pendataan/infocabang');
@@ -99,7 +100,25 @@ class Pendataan extends CI_Controller
 
 		$this->view->getDefault($data, 'pendataan/datastokcabang');
 	}
+	public function penjualanCSV($datacabangId)
+	{
+		$penjualan = $this->jual->getOrderSum($datacabangId);
+		$filename = 'penjualan' . date('Ymd') . '.csv';
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/csv; ");
 
+		// file creation 
+		$file = fopen('php://output', 'w');
+
+		$header = array("INVOICE", "ID PEMBELIAN", "NAMA PELANGGAN", "TOTAL PEMBELIAN", "TANGGAL PEMBELIAN", "ID CABANG");
+		fputcsv($file, $header);
+		foreach ($penjualan as $key => $line) {
+			fputcsv($file, $line);
+		}
+		fclose($file);
+		exit;
+	}
 
 	public function Laporan()
 	{

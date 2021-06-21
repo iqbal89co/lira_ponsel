@@ -12,7 +12,7 @@ class Gudang extends CI_Controller
 	}
 	public function stokbarang()
 	{
-		$data['title'] = 'Stok Barang';
+		$data['title'] = 'stok barang';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$data['cabang'] = $this->user->getCabang($data['user']['id']);
 		$data['stok'] = $this->gudang->getAllStokCabang($data['cabang']['id']);
@@ -31,7 +31,7 @@ class Gudang extends CI_Controller
 	}
 	public function Kategori()
 	{
-		$data['title'] = 'Kategori';
+		$data['title'] = 'kategori';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$data['kategori'] = $this->gudang->getAllKategori();
 

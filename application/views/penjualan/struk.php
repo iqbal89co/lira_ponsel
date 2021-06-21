@@ -1,10 +1,66 @@
 <style>
-	#invoice-POS {
+	* {
+		margin: 0;
+		padding: 0;
+		font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+		box-sizing: border-box;
+		font-size: 15px;
+	}
+
+	table td {
+		vertical-align: top;
+	}
+
+	#invoice {
 		box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+		text-align: center;
+		align-items: center;
+		justify-content: center;
+		margin: 120 auto;
 		padding: 2mm;
-		margin: 0 auto;
-		width: 44mm;
+		width: 600px;
+		height: auto;
 		background: #FFF;
+	}
+
+	.invoice {
+		margin: 40px auto;
+		text-align: left;
+		width: 100%;
+	}
+
+	.invoice td {
+		padding: 5px 0;
+	}
+
+	.invoice .invoice-items {
+		width: 100%;
+	}
+
+	.invoice .invoice-items td {
+		border-top: #eee 1px solid;
+	}
+
+	.invoice .invoice-items .total td {
+		border-top: 2px solid #333;
+		border-bottom: 2px solid #333;
+		font-weight: 900;
+	}
+
+	.content {
+		max-width: 600px;
+		margin: 0 auto;
+		display: block;
+		padding: 20px;
+	}
+
+	.content,
+	.content-wrap {
+		padding: 10px !important;
+	}
+
+	.invoice {
+		width: 100% !important;
 	}
 
 	::selection {
@@ -18,12 +74,12 @@
 	}
 
 	h1 {
-		font-size: 1.5em;
+		font-size: 0.9em;
 		color: #222;
 	}
 
 	h2 {
-		font-size: .9em;
+		font-size: 0.9em;
 	}
 
 	h3 {
@@ -33,7 +89,7 @@
 	}
 
 	p {
-		font-size: .7em;
+		font-size: 2em;
 		color: #666;
 		line-height: 1.2em;
 	}
@@ -46,7 +102,7 @@
 	}
 
 	#top {
-		min-height: 100px;
+		max-height: 100px;
 	}
 
 	#mid {
@@ -55,23 +111,6 @@
 
 	#bot {
 		min-height: 50px;
-	}
-
-	#top .logo {
-		float: left;
-		height: 60px;
-		width: 60px;
-		background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
-		background-size: 60px 60px;
-	}
-
-	.clientlogo {
-		float: left;
-		height: 60px;
-		width: 60px;
-		background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
-		background-size: 60px 60px;
-		border-radius: 50px;
 	}
 
 	.info {
@@ -90,17 +129,17 @@
 
 	table {
 		width: 100%;
-		border-collapse: collapse;
+		border: none;
 	}
 
 	td {
 		padding: 5px 0 5px 15px;
-		border: 1px solid #EEE
+		border: none;
 	}
 
 	.tabletitle {
 		padding: 5px;
-		font-size: .5em;
+		font-size: 2em;
 		background: #EEE;
 	}
 
@@ -113,64 +152,76 @@
 	}
 
 	.itemtext {
-		font-size: .5em;
+		font-size: 1.0em;
 	}
 
 	#legalcopy {
 		margin-top: 5mm;
 	}
+
+	.footer p,
+	.footer a,
+	.footer unsubscribe,
+	.footer td {
+		font-size: 15px;
+	}
 </style>
 
-<div id="invoice-POS">
+<div id="invoice">
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<td class="content-block" style="text-align: center;">
+					<h5>Lira Ponsel</h5>
+					<h2>Terimakasih Telah Berbelanja</h2>
+				</td>
+			</tr>
+			<tr>
+				<td class="content-block">
+					<table class="invoice" cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr>
+								<td>Toko : <span class="nama_toko"></span></br>
+									Alamat : <span class="address"></span></br>
+									No. HP : <span class="no_telp"></span></br>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table id="masukinDataBelanja">
+										<tbody>
+											<tr class="tabletitle">
+												<td class="item">
+													<h2>Barang</h2>
+												</td>
+												<td class="Hours">
+													<h2>Qty</h2>
+												</td>
+												<td class="Rate">
+													<h2>Sub Total</h2>
+												</td>
+											</tr>
+										</tbody>
 
-	<center id="top">
-		<div class="logo"></div>
-		<div class="info">
-			<h2>SBISTechs Inc</h2>
-		</div>
-		<!--End Info-->
-	</center>
-	<!--End InvoiceTop-->
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
 
-	<div id="mid">
-		<div class="info">
-			<h2>Contact Info</h2>
-			<p>
-				Toko : <span class="nama_toko"></span></br>
-				Address : <span class="address"></span></br>
-				Phone : <span class="no_telp"></span></br>
-			</p>
-		</div>
-	</div>
-	<!--End Invoice Mid-->
+			<tr>
+				<td class="content-block">
+					Lira Ponsel. Tanah Merah, Binjai Selatan 20725
+				</td>
+			</tr>
 
-	<div id="bot">
-
-		<div id="table">
-			<table id="masukinDataBelanja">
-				<tr class="tabletitle">
-					<td class="item">
-						<h2>Item</h2>
-					</td>
-					<td class="Hours">
-						<h2>Qty</h2>
-					</td>
-					<td class="Rate">
-						<h2>Sub Total</h2>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<!--End Table-->
-
-		<div id="legalcopy">
-			<p class="legal"><strong>Thank you for your business!</strong>  Payment is expected within 31 days; please process this invoice within that time. There will be a 5% interest charge per month on late invoices.
-			</p>
-		</div>
-
-	</div>
+		</tbody>
+	</table>
 	<!--End InvoiceBot-->
 </div>
+<!--End Invoice-->
 <!--End Invoice-->
 <script src="<?= base_url("assets/") ?>vendor/jquery/jquery.min.js"></script>
 <script>
@@ -179,7 +230,7 @@
 	}
 	$(document).ready(function() {
 		let json = <?= $json ?>;
-		console.log(<?= $json ?>);
+		console.log(json);
 		$('.nama_toko').text(json.nama_toko);
 		$('.address').text(json.alamat);
 		$('.no_telp').text(json.no_telp);

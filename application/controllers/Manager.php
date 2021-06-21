@@ -13,7 +13,7 @@ class Manager extends CI_Controller
 	}
 	public function index()
 	{
-		$data['title'] = 'dashboard manager';
+		$data['title'] = 'Dashboard Manager';
 		$data['user'] = $this->user->getUser($this->session->userdata('username'));
 		$data['jumlah_kategori'] = $this->gudang->totalKategori();
 		$data['total_stok'] = $this->pendataan->getAllStokBarang();

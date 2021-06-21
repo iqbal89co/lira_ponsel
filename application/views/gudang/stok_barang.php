@@ -81,11 +81,17 @@
 				},
 				dataType: "JSON",
 				success: function(data) {
-					location.reload();
+					finishUpdateStok();
 				}
 			})
 
 		});
+		$(document).on('click', '#submitEditStok', function() {
+			$('.jumbotron').hide();
+			setTimeout(function() {
+				window.location.reload();
+			}, 1000);
+		})
 		$(document).on('click', '#submitEditStok, #closeEditStok', function() {
 			$('#editStokBarang').show();
 			$('#submitEditStok, #closeEditStok').hide();
